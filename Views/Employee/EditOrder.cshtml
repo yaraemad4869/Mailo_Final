@@ -17,7 +17,7 @@
                 <select asp-for="OrderStatus" name="os" asp-route-os="OrderStatus" class="form-control">
                     @foreach (var orderStatus in Enum.GetValues(typeof(OrderStatus)))
                     {
-                        @if (Model.OrderStatus.ToString() != OrderStatus.Cancelled.ToString() || Model.OrderStatus.ToString() != OrderStatus.New.ToString())
+                        @if (Model.OrderStatus.ToString() != OrderStatus.Cancelled.ToString() && Model.OrderStatus.ToString() != OrderStatus.New.ToString())
                         {
                             <option asp-for="OrderStatus" class="form-check-input" value="@orderStatus" id="@orderStatus.ToString()">@orderStatus.ToString()</option>
                         }

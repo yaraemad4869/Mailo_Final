@@ -6,7 +6,7 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>View Orders</h1>
-        @if (User.IsInRole("Admin"))
+        @if (User.IsInRole("Employee"))
         {
             <a asp-action="ViewRequiredOrders" class="btn btn-primary text-decoration-none" asp-controller="Employee">View My Required Tasks</a>
         }

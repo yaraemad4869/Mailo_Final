@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using Mailo.Data;
 using Mailo.Data.Enums;
 using Mailo.IRepo;
@@ -35,6 +35,29 @@ namespace Mailo.Controllers
         {
             if (ModelState.IsValid)
             {
+                try
+                {
+                    var mailAddress = new System.Net.Mail.MailAddress(employee.Email);
+                }
+                catch (FormatException)
+                {
+                    ModelState.AddModelError("", "The email address format is invalid.");
+                    return View(employee);
+                }
+
+                // التحقق إذا كان البريد الإلكتروني موجودًا بالفعل
+                if (_db.Users.Any(u => u.Email == employee.Email))
+                {
+                    ModelState.AddModelError("", "The email is already in use.");
+                    return View(employee);
+                }
+
+                // التحقق إذا كان رقم الهاتف موجودًا بالفعل
+                if (_db.Users.Any(u => u.PhoneNumber == employee.PhoneNumber))
+                {
+                    ModelState.AddModelError("", "The phone number is already in use.");
+                    return View(employee);
+                }
                 _unitOfWork.employees.Insert(employee);
                 TempData["Success"] = "Employee Has Been Added Successfully";
                 return RedirectToAction("Index");
@@ -82,8 +105,11 @@ namespace Mailo.Controllers
             {
                 var orders = await _db.Orders.Where(o => o.EmpID == employee.ID).ToListAsync();
                 if(orders!=null){
-                    _db.Orders.RemoveRange(orders);
-                    await _db.SaveChangesAsync();
+                    foreach (Order order in orders)
+                    {
+                        order.EmpID = null;
+                        _unitOfWork.orders.Update(order);
+                    }
                 }
                 _unitOfWork.employees.Delete(employee);
                 TempData["Success"] = "Employee Has Been Deleted Successfully";
@@ -175,7 +201,7 @@ namespace Mailo.Controllers
                 }
             }
             var available = orders
-                .Where(o => o != null && o.OrderStatus == OrderStatus.Pending && o.EmpID == null)
+                .Where(o =>o.OrderStatus != OrderStatus.New && o.OrderStatus!=OrderStatus.Cancelled && o.EmpID == null)
                 .ToList();
             if (available == null || !available.Any()) // Check if available orders are found
             {

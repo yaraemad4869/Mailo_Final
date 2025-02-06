@@ -80,14 +80,14 @@
 		</div>
         @if (Model.PromoCodeUsed != null && Model.PromoCodeUsed != "")
         {
-            <h6 class="text-success">Total Price: @Model.TotalPrice.ToString("C") <span class="text-danger text-decoration-line-through">@Model.OrderPrice.ToString("C")</span></h6>
-            <h6 class="text-success">Total Price With Delivery: @Model.FinalPrice.ToString("C") <span class="text-danger text-decoration-line-through">@Model.OrderPrice.ToString("C")</span></h6>
+            <h6 class="text-success">Total Price: @Model.TotalPrice <span class="text-danger text-decoration-line-through">@Model.OrderPrice</span></h6>
+            <h6 class="text-success">Total Price With Delivery: @Model.FinalPrice <span class="text-danger text-decoration-line-through">@Model.OrderPrice</span></h6>
 
         }
         else
         {
-            <h6 class="text-success">Total Price: @Model.TotalPrice.ToString("C")</h6>
-            <h6 class="text-success">Total Price With Delivery: @Model.FinalPrice.ToString("C")
+            <h6 class="text-success">Total Price: @Model.TotalPrice</h6>
+            <h6 class="text-success">Total Price With Delivery: @Model.FinalPrice
                 </h6>
 
         }
@@ -129,7 +129,7 @@
                                 <h3 class="card-title fw-bold">@item.product.Name</h3>
 
                                 <h4 class="mt-2 text-primary">
-                                    @item.product.TotalPrice
+                                    Price: @item.product.TotalPrice
                                     @if (item.product.TotalPrice != item.product.Price)
                                     {
                                         <span class="text-muted fs-6">

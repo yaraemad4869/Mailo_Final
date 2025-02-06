@@ -70,28 +70,6 @@ namespace Mailo.Data
             //       Address = "Beni-Suef"
             //   }
             //   );
-            #region Delete
-            //modelBuilder.Entity<OrderProduct>()
-            //    .HasOne(op => op.Variant)
-            //    .WithMany(v => v.OrderProducts)
-            //    .HasForeignKey(op => op.VariantID)
-            //    .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.user)
-                .WithMany(e => e.orders)
-                .HasForeignKey(o => o.UserID)
-                .OnDelete(DeleteBehavior.Cascade);
-            //modelBuilder.Entity<Order>()
-            //    .HasOne(o => o.employee)
-            //    .WithMany(e => e.orders)
-            //    .HasForeignKey(o => o.EmpID)
-            //    .OnDelete(DeleteBehavior.SetNull);
-            modelBuilder.Entity<ProductVariant>()
-                .HasOne(v => v.Product)
-                .WithMany(p => p.Variants)
-                .HasForeignKey(v => v.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-            #endregion
             #region M:M Tables
 
             modelBuilder.Entity<OrderProduct>().HasKey(op => new { op.OrderID, op.ProductID, op.VariantID });
@@ -182,6 +160,30 @@ namespace Mailo.Data
             {
                 rel.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            #region Delete
+            //modelBuilder.Entity<OrderProduct>()
+            //    .HasOne(op => op.Variant)
+            //    .WithMany(v => v.OrderProducts)
+            //    .HasForeignKey(op => op.VariantID)
+            //    .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.user)
+                .WithMany(e => e.orders)
+                .HasForeignKey(o => o.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<Order>()
+            //    .HasOne(o => o.employee)
+            //    .WithMany(e => e.orders)
+            //    .HasForeignKey(o => o.EmpID)
+            //    .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<ProductVariant>()
+                .HasOne(v => v.Product)
+                .WithMany(p => p.Variants)
+                .HasForeignKey(v => v.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+            #endregion
+
         }
 
         #region DbSets

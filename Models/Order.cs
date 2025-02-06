@@ -21,7 +21,7 @@ namespace Mailo.Models
         public double OrderPrice { get; set; }
         [DisplayName("Delivery Fee")]
 
-        public double DeliveryFee { get; set; }
+        public double DeliveryFee { get; set; } = 100;
         public double Discount;
 		[DisplayName("Total Price")]
    

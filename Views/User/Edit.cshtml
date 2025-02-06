@@ -13,7 +13,8 @@
     <div class="container1 d-flex flex-column justify-content-center bg-light my-3 rounded-3 p-5">
                 <form method="post" asp-action="Edit" enctype="multipart/form-data">
                     <div asp-validation-summary="All"></div>
-
+                    <input asp-for="imageSrc" hidden />
+                    <input asp-for="ImageUrl" hidden/>
                     <div class="form-group mb-3">
 				<h5><label asp-for="Name"></label></h5>
                         <input asp-for="Name" class="form-control" />
@@ -46,8 +47,8 @@
                     </div>
 
                     <div class="form-group mb-3">
-				<h5><label asp-for="clientFile" class="control-label">Upload New Image</label></h5>
-                    <input asp-for="clientFile" class="form-control" type="file" onchange="loadFile(event)" />
+				<h5><label asp-for="clientFile" class="control-label">Upload New Image (Optional)</label></h5>
+                    <input asp-for="clientFile" class="form-control" value="@Model.clientFile" type="file" onchange="loadFile(event)" />
                         <span asp-validation-for="clientFile" class="text-danger"></span>
                     </div>
 

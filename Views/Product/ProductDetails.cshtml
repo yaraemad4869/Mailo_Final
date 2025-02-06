@@ -4,149 +4,149 @@
 <style>
     /* تحسين النجوم */
     .fa-star {
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: color 0.2s, transform 0.2s;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
     }
 
-        .fa-star:hover {
-            transform: scale(1.2);
-        }
+    .fa-star:hover {
+    transform: scale(1.2);
+    }
 
-        .fa-star.active {
-            color: #ffc107;
-            text-shadow: 0 0 8px rgba(255, 193, 7, 0.7);
-        }
+    .fa-star.active {
+    color: #ffc107;
+    text-shadow: 0 0 8px rgba(255, 193, 7, 0.7);
+    }
 
     /* تحسين تصميم قسم التقييم */
     #imagePreviewContainer {
-        display: none;
-        margin-top: 10px;
-        justify-content: center;
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+    margin-top: 10px;
+    justify-content: center;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     #imagePreview {
-        max-width: 100%;
-        height: auto;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     /* تحسين أزرار الألوان */
     .color-btn {
-        width: 40px;
-        height: 40px;
-        border: 2px solid #fff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
     }
 
-        .color-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+    .color-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
 
     /* تحسين تصميم البطاقات */
     .card {
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
-        transition: transform 0.3s, box-shadow 0.3s;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
     }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
+    .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
 
-        .card h5 {
-            color: #333;
-            font-weight: 600;
-        }
+    .card h5 {
+    color: #333;
+    font-weight: 600;
+    }
 
-        .card small {
-            color: #6c757d;
-        }
+    .card small {
+    color: #6c757d;
+    }
 
-        .card p {
-            color: #555;
-            line-height: 1.6;
-        }
+    .card p {
+    color: #555;
+    line-height: 1.6;
+    }
 
     /* تحسين التصميم العام */
     .container {
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
     }
 
     h2.fw-bold {
-        color: #2c3e50;
-        font-size: 2.5rem;
-        margin-bottom: 20px;
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
     }
 
     h4.text-success {
-        color: #28a745 !important;
-        font-size: 1.8rem;
-        margin-bottom: 15px;
+    color: #28a745 !important;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
     }
 
     .badge.bg-secondary {
-        background-color: #6c757d !important;
-        font-size: 0.9rem;
-        padding: 8px 12px;
-        border-radius: 20px;
+    background-color: #6c757d !important;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 20px;
     }
 
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
-        background-color: rgba(0, 0, 0, 0.5);
-        border-radius: 50%;
-        padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 10px;
     }
 
     .carousel-control-prev,
     .carousel-control-next {
-        width: 5%;
+    width: 5%;
     }
 
     .carousel-item img {
-        border-radius: 15px;
-        transition: transform 0.3s;
+    border-radius: 15px;
+    transition: transform 0.3s;
     }
 
-    .carousel-item:hover img {
-        transform: scale(1.05);
-    }
+    /* .carousel-item:hover img { */
+    /* transform: scale(1.05); */
+    /* } */
 
     /* تحسين التصميم للأحجام */
     .mt-3 h5 {
-        color: #495057;
-        font-size: 1.2rem;
-        margin-bottom: 10px;
+    color: #495057;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
     }
 
     .mt-3 .badge {
-        margin-right: 8px;
-        font-weight: 500;
+    margin-right: 8px;
+    font-weight: 500;
     }
 
     /* تحسين التصميم للصور المرفقة */
     .img-fluid.rounded {
-        border: 2px solid #e9ecef;
-        transition: transform 0.3s, box-shadow 0.3s;
+    border: 2px solid #e9ecef;
+    transition: transform 0.3s, box-shadow 0.3s;
     }
 
-        .img-fluid.rounded:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+    /* .img-fluid.rounded:hover { */
+    /* transform: scale(1.05); */
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); */
+    /* } */
 </style>
 @{
     ViewData["Title"] = "Product Details";
@@ -156,16 +156,40 @@
 
 <div class="container my-4">
     <div class="row mb-3">
+        @{
+            var availableVariants = Model.Variants?.Where(v => v.Quantity > 0).ToList();
+        }
+
         <!-- عرض الصور مع خيارات الألوان -->
         <div class="col-md-6">
             <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     @for (int i = 0; i < colors.Count; i++)
                     {
+                        bool flag = false;
+
                         var variant = Model.Variants.FirstOrDefault(v => v.ColorId == colors[i].Id);
+                        foreach (var v in availableVariants)
+                        {
+                            Console.WriteLine($"{v.ColorId}, {v.Quantity}, {flag}");
+
+                            if (v.ColorId == colors[i].Id)
+                            {
+                                Console.WriteLine($"Done {v.ColorId}, {flag}");
+                                flag = true;
+                                break;
+                            }
+                        }
                         if (variant?.dbImage != null)
                         {
-                            <div class="carousel-item @(i == 0 ? "active" : "")" data-color-id="@colors[i].Id">
+                            <div class="position-relative carousel-item @(i == 0 ? "active" : "")" data-color-id="@colors[i].Id">
+                                @{
+                                    
+                                    if(!flag){
+                                        <h6 class="text-white bg-danger position-absolute rounded-3" style=" top:10px; right:10px;padding:10px;">Sold Out</h6>
+
+                                    }
+                                }
                                 <img src="data:image/jpeg;base64,@Convert.ToBase64String(variant.dbImage)" class="d-block w-100 rounded" alt="Product Image" />
                             </div>
                         }
@@ -194,7 +218,13 @@
         }
         <!-- تفاصيل المنتج -->
         <div class="col-md-6">
-            <h2 class="fw-bold">@Model.Name</h2>
+            @* <div class="d-block d-md-flex justify-content-between align-items-center"> *@
+                <h2 class="fw-bold">@Model.Name</h2>
+            @*     @if (!flag) *@
+            @*     { *@
+            @*         <h6 class="text-white bg-danger position-absolute rounded-3" style=" top:5px; right:5px;padding:10px;">Sold Out</h6> *@
+            @*     } *@
+            @* </div> *@
             <p class="text-muted">@Model.Description</p>
             <h4 class="text-success">
                 Price: $@Model.TotalPrice @if (Model.TotalPrice != Model.Price)
@@ -227,7 +257,6 @@
             }
             else if (User.IsInRole("Client"))
             {
-                var availableVariants = Model.Variants?.Where(v => v.Quantity > 0).ToList();
                 @if (availableVariants?.Any() == true)
                 {
                     <div class="d-flex justify-content-evenly mt-2">

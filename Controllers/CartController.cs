@@ -136,6 +136,10 @@ namespace Mailo.Controllers
             // Get or create the user's cart
             var cart = await _order.GetOrCreateCart(user);
             var deliveryFee = await _db.deliveries.Where(d => d.Name == user.Governorate).Select(d => d.DeliveryFee).FirstOrDefaultAsync();
+            if(deliveryFee == null || deliveryFee == 0)
+            {
+                deliveryFee = 100;
+            }
             if (cart == null)
             {
                 cart = new Order

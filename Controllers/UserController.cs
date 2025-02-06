@@ -169,28 +169,33 @@ namespace Mailo.Controllers
                 //    product.imageSrc=.imageSrc = "~/images/" + product.clientFile.FileName;
                 //}
                 // معالجة رفع الصورة إذا كانت موجودة
-            //    if (product.clientFile != null && product.clientFile.Length > 0)
-            //{
-            //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", product.clientFile.FileName);
+                //    if (product.clientFile != null && product.clientFile.Length > 0)
+                //{
+                //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", product.clientFile.FileName);
 
-            //    using (var stream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        await product.clientFile.CopyToAsync(stream);
-            //    }
+                //    using (var stream = new FileStream(filePath, FileMode.Create))
+                //    {
+                //        await product.clientFile.CopyToAsync(stream);
+                //    }
 
-            //    existingProduct.imageSrc = "~/images/" + product.clientFile.FileName;
-            //}
+                //    existingProduct.imageSrc = "~/images/" + product.clientFile.FileName;
+                //}
 
-            //if (ModelState.IsValid)
-            //{
+                //if (ModelState.IsValid)
+                //{
                 //existingProduct.Name = product.Name;
                 //existingProduct.Price = product.Price;
                 //existingProduct.Description = product.Description;
                 //existingProduct.CategoryId = product.CategoryId;
                 //existingProduct.Discount = product.Discount;
 
-              
-               
+
+                if (product.clientFile != null)
+                {
+                    MemoryStream stream = new MemoryStream();
+                    product.clientFile.CopyTo(stream);
+                    product.dbImage = stream.ToArray();
+                }
 
                 _unitOfWork.products.Update(product);
 
