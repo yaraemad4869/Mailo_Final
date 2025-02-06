@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Product Management";
+}
+
+<div class="container">
+    <div class="d-block d-md-flex justify-content-between align-items-center">
+        <h1 class="text-primary">Product Management</h1>
+        <a asp-action="Index_A" asp-controller="User" class="btn btn-primary p-2 rounded-2 text-decoration-none">Show Products</a>
+    </div>
+    <div class="text-center my-3">
+        <a asp-controller="Categories" asp-action="Index" class="btn btn-primary w-100 my-3 rounded-2">
+            <i class="bi bi-plus"></i> &nbsp; Add New Category
+        </a>
+
+        <a asp-controller="Color" asp-action="Index" class="btn btn-primary w-100 my-3 rounded-2">
+            <i class="bi bi-plus"></i> &nbsp; Add New Color
+        </a>
+        <a asp-controller="Size" asp-action="Index" class="btn btn-primary w-100 my-3 rounded-2">
+            <i class="bi bi-plus"></i> &nbsp; Add New Size
+        </a>
+
+        <a asp-controller="User" asp-action="New" class="btn btn-primary w-100 my-3 rounded-2">
+            <i class="bi bi-plus"></i> &nbsp; Add New Product
+        </a>
+        <a asp-controller="ProductVariant" asp-action="Index" class="btn btn-primary w-100 my-3 rounded-2">
+            <i class="bi bi-plus"></i> &nbsp; Add New Quantity
+        </a>
+    </div>
+
+
+</div>

@@ -1,0 +1,211 @@
+﻿@model ReviewViewModel
+
+@{
+    ViewData["Title"] = "Add a Review";
+}
+
+<!-- روابط الخطوط والأيقونات -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap" rel="stylesheet" />
+
+<!-- تنسيق الصفحة -->
+<style>
+  /*   body {
+        font-family: 'Cairo', sans-serif;
+        background-color: #f8f9fa;
+        padding: 0;
+        margin: 0;
+    } */
+
+   /*  .review-container {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+        .review-container h2 {
+            font-weight: 600;
+            color: #343a40;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        } */
+
+    .rating-stars {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+        .rating-stars i {
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.3s;
+            padding: 5px;
+        }
+
+            .rating-stars i.active,
+            .rating-stars i:hover {
+                color: #ff9800;
+            }
+
+/* .btn {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+		background-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+ */
+    .file-upload {
+        margin-top: 15px;
+    }
+
+        .file-upload label {
+            font-size: 16px;
+            color: #495057;
+            cursor: pointer;
+        }
+
+    .custom-file-label {
+        background-color: #e9ecef;
+        padding: 8px 15px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    .image-preview {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 5px;
+        }
+
+    .text-danger {
+        color: red;
+        font-size: 14px;
+    }
+</style>
+
+<div class="review-container">
+    <h2>Add your Review</h2>
+    <form id="reviewForm" asp-action="_CreateReviewPartial" asp-controller="Product" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="ProductId" value="@ViewBag.ProductId" />
+
+        <!-- 📝 حقل التعليق -->
+        <div>
+            <textarea class="form-control" asp-for="Content" placeholder="Write your comment here..." rows="5"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <!-- ⭐ تقييم النجوم -->
+        <div class="rating-stars">
+            <label>Rating:</label>
+            <div id="stars">
+                @for (var i = 1; i <= 5; i++)
+                {
+                    <i class="fas fa-star" data-value="@i"></i>
+                }
+            </div>
+            <input type="hidden" asp-for="Rating" />
+            <span asp-validation-for="Rating" class="text-danger"></span>
+        </div>
+
+        <!-- 📸 رفع صورة -->
+        <div class="file-upload">
+            <label for="uploadImage">Upload a photo (optional):</label>
+            <input id="uploadImage" type="file" asp-for="clientFile" accept="image/*" hidden />
+            <label class="custom-file-label" for="uploadImage">Choose a file...</label>
+        </div>
+
+        <!-- ✅ معاينة الصورة قبل الرفع -->
+        <div class="image-preview" id="imagePreviewContainer">
+            <img id="imagePreview" src="#" alt="Preview" />
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+       
+        document.addEventListener("DOMContentLoaded", function () {
+            const stars = document.querySelectorAll("#stars i");
+            const ratingInput = document.querySelector("input[name='Rating']");
+            const imageInput = document.getElementById("uploadImage");
+            const imagePreview = document.getElementById("imagePreview");
+            const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+            const fileLabel = document.querySelector(".custom-file-label");
+
+            // التعامل مع تقييم النجوم
+            stars.forEach(star => {
+                star.addEventListener("click", function () {
+                    let selectedRating = this.getAttribute("data-value");
+                    ratingInput.value = selectedRating;
+
+                    stars.forEach(s => s.classList.remove("active"));
+                    for (let i = 0; i < selectedRating; i++) {
+                        stars[i].classList.add("active");
+                    }
+                });
+            });
+
+            // معاينة الصورة قبل الرفع
+            imageInput.addEventListener("change", function () {
+                const file = this.files[0];
+                if (file) {
+                    fileLabel.textContent = file.name;
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imagePreview.src = e.target.result;
+                        imagePreviewContainer.style.display = "flex";
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    fileLabel.textContent = "Choose a file...";
+                    imagePreviewContainer.style.display = "none";
+                }
+            });
+        });
+    </script>
+}

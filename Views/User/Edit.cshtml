@@ -1,0 +1,74 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<style>
+    .container1 {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    }
+</style>
+<div class="container">
+	<h1 class="text-primary">Edit Product</h1>
+    <div class="container1 d-flex flex-column justify-content-center bg-light my-3 rounded-3 p-5">
+                <form method="post" asp-action="Edit" enctype="multipart/form-data">
+                    <div asp-validation-summary="All"></div>
+
+                    <div class="form-group mb-3">
+				<h5><label asp-for="Name"></label></h5>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+				<h5><label asp-for="Price"></label></h5>
+                        <input type="number" asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+				<h5><label asp-for="Discount"></label></h5>
+                        <input type="number" asp-for="Discount" class="form-control" />
+                        <span asp-validation-for="Discount" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+				<h5><label asp-for="Description"></label></h5>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+				<h5><label asp-for="CategoryId" class="control-label">Category</label></h5>
+                        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control">
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+				<h5><label asp-for="clientFile" class="control-label">Upload New Image</label></h5>
+                    <input asp-for="clientFile" class="form-control" type="file" onchange="loadFile(event)" />
+                        <span asp-validation-for="clientFile" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Index" asp-controller="Product" class="btn btn-danger">Cancel</a>
+        </form>
+            </div>
+            </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            var loadFile = function (event) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var myImg = document.getElementById('myImg');
+                    myImg.src = reader.result;
+                }
+                reader.readAsDataURL(event.target.files[0]);
+            }
+
+          
+        </script>
+    }

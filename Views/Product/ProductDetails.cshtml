@@ -1,0 +1,476 @@
+﻿@using Mailo.Data.Enums
+@using PayPal.Api
+@model Product
+<style>
+    /* تحسين النجوم */
+    .fa-star {
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.2s, transform 0.2s;
+    }
+
+        .fa-star:hover {
+            transform: scale(1.2);
+        }
+
+        .fa-star.active {
+            color: #ffc107;
+            text-shadow: 0 0 8px rgba(255, 193, 7, 0.7);
+        }
+
+    /* تحسين تصميم قسم التقييم */
+    #imagePreviewContainer {
+        display: none;
+        margin-top: 10px;
+        justify-content: center;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #imagePreview {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* تحسين أزرار الألوان */
+    .color-btn {
+        width: 40px;
+        height: 40px;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    /* تحسين تصميم البطاقات */
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h5 {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .card small {
+            color: #6c757d;
+        }
+
+        .card p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+    /* تحسين التصميم العام */
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    h2.fw-bold {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    h4.text-success {
+        color: #28a745 !important;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    .badge.bg-secondary {
+        background-color: #6c757d !important;
+        font-size: 0.9rem;
+        padding: 8px 12px;
+        border-radius: 20px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        padding: 10px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 5%;
+    }
+
+    .carousel-item img {
+        border-radius: 15px;
+        transition: transform 0.3s;
+    }
+
+    .carousel-item:hover img {
+        transform: scale(1.05);
+    }
+
+    /* تحسين التصميم للأحجام */
+    .mt-3 h5 {
+        color: #495057;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .mt-3 .badge {
+        margin-right: 8px;
+        font-weight: 500;
+    }
+
+    /* تحسين التصميم للصور المرفقة */
+    .img-fluid.rounded {
+        border: 2px solid #e9ecef;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .img-fluid.rounded:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+</style>
+@{
+    ViewData["Title"] = "Product Details";
+    var colors = Model.Variants.Select(v => v.Color).Distinct().ToList();
+    var sizes = Model.Variants.Select(v => v.Size).Distinct().ToList();
+}
+
+<div class="container my-4">
+    <div class="row mb-3">
+        <!-- عرض الصور مع خيارات الألوان -->
+        <div class="col-md-6">
+            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < colors.Count; i++)
+                    {
+                        var variant = Model.Variants.FirstOrDefault(v => v.ColorId == colors[i].Id);
+                        if (variant?.dbImage != null)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")" data-color-id="@colors[i].Id">
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(variant.dbImage)" class="d-block w-100 rounded" alt="Product Image" />
+                            </div>
+                        }
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+
+
+            <div class="mt-3 d-flex gap-2">
+                @foreach (var color in colors)
+                {
+                    <button class="btn p-3 border rounded-circle color-btn" style="background-color: @color.ColorName;" data-color-id="@color.Id"></button>
+                }
+            </div>
+        </div>
+        @if (User.IsInRole("Client"))
+        {
+            bool isAddedToCart = Model.OrderProducts?.Any(op => op.order.user.Email == User.Identity?.Name
+            && op.order.OrderStatus == OrderStatus.New) ?? false;
+        }
+        <!-- تفاصيل المنتج -->
+        <div class="col-md-6">
+            <h2 class="fw-bold">@Model.Name</h2>
+            <p class="text-muted">@Model.Description</p>
+            <h4 class="text-success">
+                Price: $@Model.TotalPrice @if (Model.TotalPrice != Model.Price)
+                {
+                    <span class="text-muted fs-6">
+                        <del class="text-danger">@Model.Price</del>
+                    </span>
+                }
+            </h4>
+
+            <!-- الأحجام المتوفرة -->
+            <div class="mt-3">
+                <h5>Available Sizes:</h5>
+                @foreach (var size in sizes)
+                {
+                    <span class="badge bg-secondary me-2 p-2">@size.SizeName</span>
+                }
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+
+                <div class="d-flex mt-2 justify-content-between">
+                    <a asp-controller="User" asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary col-5">
+                        <i class="bi bi-pen"></i><span> Edit</span>
+                    </a>
+                    <a asp-controller="User" asp-action="Delete" asp-route-id="@Model.ID" class="btn btn-danger col-5">
+                        <i class="bi bi-trash3"></i><span class="d-inline d-md-none d-lg-inline"> Delete</span>
+                    </a>
+                </div>
+            }
+            else if (User.IsInRole("Client"))
+            {
+                var availableVariants = Model.Variants?.Where(v => v.Quantity > 0).ToList();
+                @if (availableVariants?.Any() == true)
+                {
+                    <div class="d-flex justify-content-evenly mt-2">
+                        <!-- Size Dropdown -->
+                        <div class="form-group col-5 mb-2">
+                            <label class="fw-bold">Size</label>
+                            <select name="sizeSelect" class="form-control size-select" data-product-id="@Model.ID">
+                                <option value="">Select Size</option>
+                                @foreach (var variant in availableVariants.GroupBy(v => v.SizeId).Select(g => g.First()))
+                                {
+                                    <option value="@variant.SizeId">@variant.Size?.SizeName</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Color Dropdown -->
+                        <div class="form-group col-5 mb-2">
+                            <label class="fw-bold">Color</label>
+                            <select name="colorSelect" class="form-control color-select" data-product-id="@Model.ID" disabled>
+                                <option value="">Select Color</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-evenly mt-2 w-100">
+                        <form asp-action="AddProduct" asp-controller="Cart" method="post" class="col-5">
+                            <input type="hidden" name="productId" value="@Model.ID" />
+                            <input type="hidden" name="color" id="color_@Model.ID" value="" />
+                            <input type="hidden" name="size" id="size_@Model.ID" value="" />
+                            <input type="hidden" name="quantity" value="1" />
+                            <button type="submit" class="btn btn-primary add-to-cart w-100" data-product-id="@Model.ID" disabled>
+                                <i class="bi bi-cart-fill"></i>
+                            </button>
+                        </form>
+                        <form asp-action="AddtoWishlist" asp-controller="Wishlist" method="post" class="col-5">
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="Name" value="@Model.Name" />
+                            <input type="hidden" name="Price" value="@Model.Price" />
+                            <input type="hidden" name="Description" value="@Model.Description" />
+                            <input type="hidden" name="imageSrc" value="@Model.imageSrc" />
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <h5 class="text-danger mt-3">Sold Out</h5>
+                    <form asp-action="AddtoWishlist" asp-controller="Wishlist" method="post" class="mt-5">
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="Name" value="@Model.Name" />
+                        <input type="hidden" name="Price" value="@Model.Price" />
+                        <input type="hidden" name="Description" value="@Model.Description" />
+                        <input type="hidden" name="imageSrc" value="@Model.imageSrc" />
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="bi bi-heart"></i> Add to Wishlist
+                        </button>
+                        @* <a asp-action="ProductDetails" asp-controller="Product" asp-route-id="@Model.ID" *@
+                        @*    class="btn btn-prmary w-50 ms-2"> *@
+                        @*     <i class="bi bi-info-circle"></i> View Details *@
+                        @* </a> *@
+                    </form>
+                }
+
+            }
+
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Views/Product/_CreateReviewPartial.cshtml", new ReviewViewModel { ProductId = Model.ID })
+
+    <!-- قسم التقييمات -->
+    <div class="mt-5">
+        <h3 class="border-bottom pb-2">Reviews:</h3>
+
+        @if (Model.Reviews != null && Model.Reviews.Any())
+        {
+            @foreach (var review in Model.Reviews.OrderByDescending(r => r.Date))
+            {
+                <div class="card mb-3 shadow-sm p-3 rounded">
+                    <div class="d-flex align-items-center">
+
+                        <div>
+                            <h5 class="mb-1">@review.User.Username</h5>
+                            <small class="text-muted">@review.Date.ToString("dd MMM yyyy")</small>
+                        </div>
+                    </div>
+                   
+                    <div class="mt-3">
+                       
+                        <!-- التقييم -->
+                        <div class="mb-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="fa fa-star @(i <= review.Rating ? "text-warning" : "text-muted")"></span>
+                            }
+                        </div>
+
+                        <!-- محتوى التقييم -->
+                        <p>@review.Content</p>
+
+                        <!-- صورة مرفقة مع التقييم -->
+                        @if (!string.IsNullOrEmpty(review.ImageUrl))
+                        {
+                            <img src="@review.ImageUrl" class="img-fluid rounded mt-2" style="max-width: 300px;" alt="Review Image" />
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+
+            <p class="text-muted">No reviews yet.</p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.color-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                let colorId = this.getAttribute('data-color-id');
+                let carouselItems = document.querySelectorAll('.carousel-item');
+
+                carouselItems.forEach(item => {
+                    if (item.getAttribute('data-color-id') === colorId) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const stars = document.querySelectorAll("#stars i");
+            const ratingInput = document.querySelector("input[name='Rating']");
+            const imageInput = document.getElementById("uploadImage");
+            const imagePreview = document.getElementById("imagePreview");
+            const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+            const fileLabel = document.querySelector(".custom-file-label");
+
+            // التعامل مع تقييم النجوم
+            stars.forEach(star => {
+                star.addEventListener("click", function () {
+                    let selectedRating = this.getAttribute("data-value");
+                    ratingInput.value = selectedRating;
+
+                    stars.forEach(s => s.classList.remove("active"));
+                    for (let i = 0; i < selectedRating; i++) {
+                        stars[i].classList.add("active");
+                    }
+                });
+            });
+
+            // معاينة الصورة قبل الرفع
+            imageInput.addEventListener("change", function () {
+                const file = this.files[0];
+                if (file) {
+                    fileLabel.textContent = file.name;
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imagePreview.src = e.target.result;
+                        imagePreviewContainer.style.display = "flex";
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    fileLabel.textContent = "Choose a file...";
+                    imagePreviewContainer.style.display = "none";
+                }
+            });
+                const sizeSelects = document.querySelectorAll('.size-select');
+                sizeSelects.forEach(sizeSelect => {
+                    sizeSelect.addEventListener('change', function () {
+                        const productId = this.getAttribute('data-product-id');
+                        const colorSelect = document.querySelector(`.color-select[data-product-id="${productId}"]`);
+                        const addToCartButton = document.querySelector(`.add-to-cart[data-product-id="${productId}"]`);
+                        const sizeInput = document.querySelector(`#size_${productId}`);
+
+                        // Set the selected size in the hidden input
+                        sizeInput.value = this.value;
+                        console.log(`Size selected for product ${productId}:`, this.value); // Debugging
+
+                        if (this.value) {
+                            // Fetch available colors for the selected size
+                            fetch(`/Cart/GetColorsForSize?productId=${productId}&sizeId=${this.value}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(`Colors fetched for product ${productId}:`, data); // Debugging
+                                    colorSelect.innerHTML = '<option value="">Select Color</option>';
+                                    data.forEach(color => {
+                                        const option = document.createElement('option');
+                                        option.value = color.colorId; // Ensure this returns the colorId
+                                        option.textContent = color.colorName;
+                                        colorSelect.appendChild(option);
+                                    });
+                                    colorSelect.disabled = false; // Enable the color dropdown
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching colors:', error);
+                                });
+                        } else {
+                            colorSelect.innerHTML = '<option value="">Select Color</option>';
+                            colorSelect.disabled = true; // Disable the color dropdown
+                            addToCartButton.disabled = true; // Disable the "Add to Cart" button
+                        }
+                    });
+                });
+
+                const colorSelects = document.querySelectorAll('.color-select');
+                colorSelects.forEach(colorSelect => {
+                    colorSelect.addEventListener('change', function () {
+                        const productId = this.getAttribute('data-product-id');
+                        const addToCartButton = document.querySelector(`.add-to-cart[data-product-id="${productId}"]`);
+                        const colorInput = document.querySelector(`#color_${productId}`);
+
+                        // Set the selected color in the hidden input
+                        colorInput.value = this.value;
+                        console.log(`Color selected for product ${productId}:`, this.value); // Debugging
+
+                        if (this.value) {
+                            addToCartButton.disabled = false;
+                        } else {
+                            addToCartButton.disabled = true;
+                        }
+                    });
+                });
+            });
+
+        document.getElementById("toggleCategory").addEventListener("click", function () {
+            var filterDiv = document.getElementById("categoryFilter");
+            if (filterDiv.style.display === "none" || filterDiv.style.display === "") {
+                filterDiv.style.display = "block";
+                filterDiv.classList.add("animate__animated", "animate__fadeInDown"); // تأثير دخول أنيق
+            } else {
+                filterDiv.classList.remove("animate__fadeInDown");
+                filterDiv.classList.add("animate__fadeOutUp"); // تأثير خروج أنيق
+                setTimeout(() => {
+                    filterDiv.style.display = "none";
+                    filterDiv.classList.remove("animate__fadeOutUp");
+                }, 500);
+            }
+        });
+    </script>
+}
+

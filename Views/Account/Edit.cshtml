@@ -1,0 +1,138 @@
+﻿@model EditUserViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+    <style>
+        .container1 {
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <div class="container">
+    <h1 class="text-primary">Edit User</h1>
+
+
+    <div class="container1 d-flex flex-column justify-content-center bg-light my-3 rounded-3 p-3">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @if (!string.IsNullOrEmpty(ViewBag.Message))
+            {
+                <div class="alert alert-success">@ViewBag.Message</div>
+            }
+
+            <div class="form-group mb-3">
+                <label asp-for="FName" class="control-label"></label>
+                <i class="fas fa-user"></i>
+                <input asp-for="FName" class="form-control" />
+                <span asp-validation-for="FName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LName" class="control-label"></label>
+                <i class="fas fa-user"></i>
+                <input asp-for="LName" class="form-control" />
+                <span asp-validation-for="LName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="control-label"></label>
+                <i class="fas fa-envelope"></i>
+                <input asp-for="Email" class="form-control" readonly />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Username" class="control-label"></label>
+                <i class="fas fa-user-circle"></i>
+                <input asp-for="Username" class="form-control" readonly />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <i class="fas fa-phone"></i>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+         
+            <div class="form-group mb-3">
+                <label asp-for="City" class="control-label"></label>
+                <i class="fas fa-map-marker-alt"></i>
+                <input asp-for="City" class="form-control"readonly />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Governorate" class="control-label"></label>
+                <i class="fas fa-map-marker-alt"></i>
+                <select asp-for="Governorate" class="form-control" asp-items="Html.GetEnumSelectList<Mailo.Data.Enums.Governorate>()">
+                    <option value="">-- Select Governorate --</option>
+
+                    
+                </select>
+
+                <span asp-validation-for="Governorate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Address" class="control-label"></label>
+                <i class="fas fa-map-marker-alt"></i>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+           @*  <div class="form-group mb-3">
+                <label asp-for="CurrentPassword" class="control-label"></label>
+                <i class="fas fa-lock"></i>
+                <input asp-for="CurrentPassword" class="form-control" type="password"  />
+                <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+            </div> *@
+
+           @*  <div class="form-group mb-3">
+                <label asp-for="NewPassword" class="control-label"></label>
+                <i class="fas fa-lock"></i>
+                <input asp-for="NewPassword" class="form-control" type="password" />
+                <span asp-validation-for="NewPassword" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ConfirmNewPassword" class="control-label"></label>
+                <i class="fas fa-lock"></i>
+                <input asp-for="ConfirmNewPassword" class="form-control" type="password" />
+                <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+            </div> *@
+
+            <div class="form-group mb-3">
+                <label asp-for="Gender" class="control-label"></label>
+                <i class="fas fa-venus-mars"></i>
+                @foreach (var gender in Enum.GetValues(typeof(Mailo.Data.Enums.Gender)))
+                {
+                    <div class="form-check">
+                        <input asp-for="Gender" class="form-check-input" type="radio" value="@gender" id="@gender.ToString()" />
+                        <label class="form-check-label" for="@gender.ToString()">@gender.ToString()</label>
+                    </div>
+                }
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                toastr.success('@TempData["SuccessMessage"]');
+            </text>
+        }
+    </script>
+
+}

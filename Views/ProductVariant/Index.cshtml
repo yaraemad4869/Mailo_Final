@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Mailo.Models.ProductVariant>
+@{
+    ViewData["Title"] = "Product Varients";
+}
+
+<div class="container">
+<div class="d-block d-md-flex justify-content-between  align-items-center mb-3">
+    <h1 class="text-primary">Product Variants</h1>
+    <a href="@Url.Action("Create")" class="btn btn-primary p-2">Add New Variant</a>
+	</div>
+    <a asp-action="ProductManagement" asp-controller="Product" class="btn btn-primary my-2">Go to Product Management</a>
+
+@if(Model.Any()){
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Color</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Images</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var variant in Model)
+        {
+            <tr>
+                <td>@variant.Product.Name</td>
+                <td>@variant.Color.ColorName</td>
+                <td>@variant.Size.SizeName</td>
+                <td>@variant.Quantity</td>
+                        <td>
+                            @if (variant.dbImage != null)
+                            {
+                                var base64Image = Convert.ToBase64String(variant.dbImage);
+                                <img src="data:image/jpeg;base64,@base64Image" alt="Variant Image" width="100" height="100" />
+                            }
+                            else
+                            {
+                                <span>No Image</span>
+                            }
+                        </td>
+
+                <td>
+                            <a asp-action="Delete" asp-route-productId="@variant.ProductId" asp-route-colorId="@variant.ColorId" asp-route-sizeId="@variant.SizeId" class="btn btn-danger">
+                                Delete
+                            </a>
+                        </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+
+else{
+    <h2 class="text-center">No Varients</h2>
+}
+
+</div>

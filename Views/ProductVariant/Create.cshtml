@@ -1,0 +1,135 @@
+﻿@model Mailo.Models.ProductVariant
+@{
+    ViewData["Title"] = "Add New Product Variant";
+}
+
+<style>
+    .container1 {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    }
+</style>
+<div class="container">
+<h1 class="text-primary">Add New Product Variant</h1>
+	<div class="container1 d-flex flex-column justify-content-center bg-light my-3 rounded-3 p-5">
+            <form method="post" asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="All"></div>
+                <input asp-for="Id" hidden />
+                <div class="form-group mb-3">
+				<h5><label for="ProductId">Product</label></h5>
+                @if (ViewBag.Products != null)
+                {
+                    <select asp-for="ProductId" class="form-control" asp-items="ViewBag.Products">
+                        <option value="">Select Product</option>
+				</select>
+                }
+				else
+				{
+				<p class="text-danger">⚠ No products available.</p>
+                    <a asp-action="New" asp-controller="User">Add Size</a>
+
+				}
+                </div>
+            <div class="form-group mb-3">
+                <h5>Color</h5>
+                <div id="colorOptions">
+                    @if (ViewBag.Colors != null)
+                    {
+                        @foreach (var color in ViewBag.Colors)
+                        {
+                            <label>
+                                <input type="checkbox" class="color-checkbox" value="@color.Id" data-name="@color.ColorName" />
+                                @color.ColorName
+                            </label>
+                            <br />
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-danger">⚠ No colors available.</p>
+                        <a asp-action="Create" asp-controller="Color">Add Color</a>
+
+                    }
+                </div>
+</div>
+            <div class="form-group mb-3">
+                <h5>Size</h5>
+                <div id="sizeOptions">
+                    @if (ViewBag.Sizes != null)
+                    {
+                    @foreach (var size in ViewBag.Sizes)
+                    {
+                        <label>
+                            <input type="checkbox" class="size-checkbox" value="@size.Id" data-name="@size.SizeName" />
+                            @size.SizeName
+                        </label>
+                        <br />
+                        } 
+                    }
+                    else
+                    {
+                        <p class="text-danger">⚠ No sizes available.</p>
+                        <a asp-action="Create" asp-controller="Size">Add Size</a>
+                    }
+                </div>
+                </div>
+            <div class="form-group mb-3">
+                <h5>Enter Quantity for Each (Color + Size) & Upload Image:</h5>
+                <div id="variants"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-action="Index" class="btn btn-danger">Cancel</a>
+            </form>
+
+        </div>
+    </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let colorCheckboxes = document.querySelectorAll(".color-checkbox");
+            let sizeCheckboxes = document.querySelectorAll(".size-checkbox");
+            let variantsContainer = document.getElementById("variants");
+
+            function updateVariants() {
+                variantsContainer.innerHTML = "";
+
+                let selectedColors = Array.from(colorCheckboxes).filter(c => c.checked);
+                let selectedSizes = Array.from(sizeCheckboxes).filter(s => s.checked);
+
+                selectedColors.forEach(color => {
+                    let colorId = color.value;
+                    let colorName = color.dataset.name;
+
+                    // ✅ رفع صورة واحدة لكل لون
+                    let imageInputHtml = `
+                        <div class="form-group mb-3">
+                            <label>Upload Image for ${colorName}:</label>
+                            <input type="file" name="ImageFiles_${colorId}" class="form-control" accept="image/*" />
+                        </div>
+                    `;
+                    variantsContainer.innerHTML += imageInputHtml;
+
+                    selectedSizes.forEach(size => {
+                        let sizeId = size.value;
+                        let sizeName = size.dataset.name;
+
+                        let variantHtml = `
+                            <div class="variant mb-3">
+                                <label>Quantity (${colorName} - ${sizeName}):</label>
+                                <input type="hidden" name="ColorIds" value="${colorId}" />
+                                <input type="hidden" name="SizeIds" value="${sizeId}" />
+                                <input type="number" name="Quantities" class="form-control" required min="1" />
+                            </div>
+                        `;
+                        variantsContainer.innerHTML += variantHtml;
+                    });
+                });
+            }
+
+            colorCheckboxes.forEach(cb => cb.addEventListener("change", updateVariants));
+            sizeCheckboxes.forEach(cb => cb.addEventListener("change", updateVariants));
+        });
+
+    </script>
+}

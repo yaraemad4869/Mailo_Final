@@ -1,0 +1,32 @@
+﻿
+    @{
+        ViewData["Title"] = "Cart is Empty";
+    }
+    <style>
+        .container1 {
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <div class="container container1 mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <div class="card bg-light rounded-3 shadow-lg p-4">
+                    <!-- Empty Cart Icon -->
+                    <div class="mb-3">
+                        <i class="fas fa-shopping-cart fa-3x text-muted"></i>
+                    </div>
+
+                    <!-- Empty Cart Message -->
+                    <h3>Your Cart is Empty</h3>
+                    <p class="text-muted">It looks like you haven't added anything to your cart yet.</p>
+
+                    <!-- Call-to-Action Button -->
+                    <a href="@Url.Action("Index_A", "User")" class="btn btn-primary mt-3">
+                        Start Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+

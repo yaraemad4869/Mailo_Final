@@ -1,0 +1,331 @@
+﻿@model List<Product>
+@using Mailo.Data.Enums;
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+@* <style> *@
+@*     .card { *@
+@*         background-color: #f8f9fa; *@
+@*         border-radius: 10px; *@
+@*         padding: 40px; *@
+@*     } *@
+
+@*     .btn-primary { *@
+@*         background-color: #007bff; *@
+@*         border-color: #007bff; *@
+@*         border-radius: 25px; *@
+@*         padding: 10px 20px; *@
+@*     } *@
+
+@*     .card h3 { *@
+@*         font-weight: 600; *@
+@*         margin-bottom: 20px; *@
+@*     } *@
+
+@*     .variant-item { *@
+@*         background-color: rgba(200, 200, 200, 0.3); *@
+@*         padding: 10px; *@
+@*         border-radius: 5px; *@
+@*         margin-bottom: 10px; *@
+@*     } *@
+@* </style> *@
+
+@* @if (Model == null || !Model.Any()) *@
+@* { *@
+@*     <div class="container flex-wrap d-flex justify-content-center align-items-center align-content-between"> *@
+@*         <div class="text-center flex-wrap d-flex justify-content-center align-items-center flex-column align-content-center"> *@
+@*             <div class="col-md-6"> *@
+@*                 <div class="card shadow-lg p-4"> *@
+@*                     <!-- Empty Wishlist Icon --> *@
+@*                     <div class="mb-3"> *@
+@*                         <i class="fas fa-heart fa-3x text-muted"></i> *@
+@*                     </div> *@
+
+@*                     <!-- Empty Wishlist Message --> *@
+@*                     <h3>Wishlist is Empty</h3> *@
+@*                     <p class="text-muted">It looks like you haven't added anything to your wishlist yet.</p> *@
+
+@*                     <!-- Call-to-Action Button --> *@
+@*                     <a asp-controller="User" asp-action="Index_U" class="btn btn-primary mt-3"> *@
+@*                         Start Shopping *@
+@*                     </a> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* } *@
+@* else *@
+@* { *@
+@*     <h2 class="text-primary">Your Wishlist</h2> *@
+@*     <div class="container"> *@
+@*         <div class="row justify-content-center"> *@
+@*             @foreach (var item in Model) *@
+@*             { *@
+@*                 <div class="col-md-4 col-sm-6 d-flex justify-content-center"> *@
+@*                     <div class="card" style="width: 18rem;"> *@
+@*                         <img src="@item.imageSrc" class="card-img-top" alt="Product Image"> *@
+@*                         <div class="card-body"> *@
+@*                             <h5 class="card-title">@item.Name</h5> *@
+@*                             <p class="card-text">@item.Description</p> *@
+@*                             <p> *@
+@*                                 @item.TotalPrice *@
+@*                                 @if (@item.Price != @item.TotalPrice) *@
+@*                                 { *@
+@*                                     <span class="text-decoration-line-through">@item.Price</span> *@
+@*                                 } *@
+@*                             </p> *@
+
+@*                             <!-- Display Variants --> *@
+@*                             <h6>Variants</h6> *@
+@*                             @if (item.Variants != null && item.Variants.Any()) *@
+@*                             { *@
+@*                                 <ul> *@
+@*                                     @foreach (var variant in item.Variants) *@
+@*                                     { *@
+@*                                         <li class="variant-item"> *@
+@*                                             <p><strong>Color:</strong> @variant.Color?.ColorName</p> *@
+@*                                             <p><strong>Size:</strong> @variant.Size?.SizeName</p> *@
+@*                                             <p><strong>Quantity:</strong> @variant.Quantity</p> *@
+@*                                         </li> *@
+@*                                     } *@
+@*                                 </ul> *@
+@*                             } *@
+@*                             else *@
+@*                             { *@
+@*                                 <p>No variants available.</p> *@
+@*                             } *@
+
+@*                             <!-- Add to Cart Form --> *@
+@*                             <form asp-action="AddProduct" asp-controller="Cart" class="d-inline-block me-2" method="post"> *@
+@*                                 <input type="hidden" name="ID" value="@item.ID" /> *@
+@*                                 <input type="hidden" name="Name" value="@item.Name" /> *@
+@*                                 <input type="hidden" name="Price" value="@item.Price" /> *@
+@*                                 <input type="hidden" name="TotalPrice" value="@item.TotalPrice" /> *@
+@*                                 <input type="hidden" name="Discount" value="@item.Discount" /> *@
+@*                                 <input type="hidden" name="imageSrc" value="@item.imageSrc" /> *@
+
+@*                                 <label for="size">Size:</label> *@
+@*                                 <select name="SizeID" class="form-control"> *@
+@*                                     @foreach (var variant in item.Variants.Where(v => v.Quantity > 0)) *@
+@*                                     { *@
+@*                                         <option value="@variant.SizeId">@variant.Size?.SizeName</option> *@
+@*                                     } *@
+@*                                 </select> *@
+
+@*                                 <label for="color">Color:</label> *@
+@*                                 <select name="ColorID" class="form-control"> *@
+@*                                     @foreach (var variant in item.Variants.Where(v => v.Quantity > 0)) *@
+@*                                     { *@
+@*                                         <option value="@variant.ColorId">@variant.Color?.ColorName</option> *@
+@*                                     } *@
+@*                                 </select> *@
+
+@*                                 <button type="submit" class="btn btn-success mt-2">Add to Cart</button> *@
+@*                             </form> *@
+
+@*                             <!-- Remove from Wishlist --> *@
+@*                             <form asp-action="RemoveFromWishlist" asp-controller="Wishlist" class="d-inline-block mt-2" method="post"> *@
+@*                                 <input type="hidden" name="ID" value="@item.ID" /> *@
+@*                                 <button type="submit" class="btn btn-danger"> *@
+@*                                     <i class="bi bi-trash3-fill btn-danger"></i> Remove *@
+@*                                 </button> *@
+@*                             </form> *@
+@*                         </div> *@
+@*                     </div> *@
+@*                 </div> *@
+@*             } *@
+@*         </div> *@
+@*     </div> *@
+@* } *@
+
+
+
+<div class="container">
+    
+
+    <div class="row justify-content-center">
+
+        @if (!Model?.Any() ?? true)
+        {
+                <div class="container flex-wrap d-flex justify-content-center align-items-center align-content-between">
+                     <div class="text-center flex-wrap d-flex justify-content-center align-items-center flex-column align-content-center"> 
+                        <div class="col-md-6">
+                             <div class="card shadow-lg p-4"> 
+                                 <div class="mb-3"> 
+                                     <i class="fas fa-heart fa-3x text-muted"></i> 
+                                 </div> 
+                                <h3>Wishlist is Empty</h3>
+                                <p class="text-muted">It looks like you haven't added anything to your wishlist yet.</p>
+
+                                <a asp-controller="Product" asp-action="Index class="btn btn-primary mt-3">
+                                    Start Shopping
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        }
+        else
+        {
+
+            @foreach (var item in Model)
+            {
+                var availableVariants = item.Variants?.Where(v => v.Quantity > 0).ToList();
+                bool isAddedToCart = item.OrderProducts?.Any(op => op.order.user.Email == User.Identity?.Name
+                && op.order.OrderStatus == OrderStatus.New) ?? false;
+                <div class="col-md-4 col-sm-6 d-flex justify-content-center">
+                    <div class="card shadow-sm position-relative" style="width: 18rem;">
+                        <a asp-action="ProductDetails" asp-controller="Product" asp-route-id="@item.ID" class="text-decoration-none text-black">
+                            @if (availableVariants?.Any() == false)
+                            {
+                                <h6 class="text-white bg-danger position-absolute rounded-3" style=" top:5px; right:5px;padding:10px;">Sold Out</h6>
+                            }
+                            <img src="@item.imageSrc" class="card-img-top" alt="@item.Name">
+                        </a>
+                        <div class="card-body">
+                                                        <a asp-action="ProductDetails" asp-controller="Product" asp-route-id="@item.ID" class="text-decoration-none text-black">
+
+                            <h3 class="card-title fw-bold">@item.Name</h3>
+                            <p class="card-text">@item.Description</p>
+
+                            <h4 class="mt-2 text-primary">
+                                Price: @item.TotalPrice
+                                @if (item.TotalPrice != item.Price)
+                                {
+                                    <span class="text-muted fs-6">
+                                        <del class="text-danger">@item.Price.ToString("C")</del>
+                                    </span>
+                                }
+                            </h4>
+                            </a>
+                            @if (availableVariants?.Any() == true)
+                            {
+                                <div class="d-flex justify-content-evenly">
+                                    <!-- Size Dropdown -->
+                                    <div class="form-group col-5 mb-2">
+                                        <label class="fw-bold">Size</label>
+                                        <select name="sizeSelect" class="form-control size-select" data-product-id="@item.ID">
+                                            <option value="">Select Size</option>
+                                            @foreach (var variant in availableVariants.GroupBy(v => v.SizeId).Select(g => g.First()))
+                                            {
+                                                <option value="@variant.SizeId">@variant.Size?.SizeName</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- Color Dropdown -->
+                                    <div class="form-group col-5 mb-2">
+                                        <label class="fw-bold">Color</label>
+                                        <select name="colorSelect" class="form-control color-select" data-product-id="@item.ID" disabled>
+                                            <option value="">Select Color</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-evenly mt-2 w-100">
+                                    <form asp-action="AddProduct" asp-controller="Cart" method="post" class="col-5">
+                                    <input type="hidden" name="productId" value="@item.ID" />
+                                    <input type="hidden" name="color" id="color_@item.ID" value="" />
+                                    <input type="hidden" name="size" id="size_@item.ID" value="" />
+                                    <input type="hidden" name="quantity" value="1" />
+                                        <button type="submit" class="btn btn-primary add-to-cart w-100" data-product-id="@item.ID" disabled>
+                                                <i class="bi bi-cart-fill"></i>
+                                        </button>
+                                </form>
+                                    <form asp-action="RemoveFromWishlist" asp-controller="Wishlist" method="post" class="col-5">
+                                    <input type="hidden" name="ID" value="@item.ID" />
+                                    <input type="hidden" name="Name" value="@item.Name" />
+                                    <input type="hidden" name="Price" value="@item.Price" />
+                                    <input type="hidden" name="Description" value="@item.Description" />
+                                    <input type="hidden" name="imageSrc" value="@item.imageSrc" />
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash3-fill btn-danger"></i> Remove
+                                        </button>
+                                </form>
+                                </div>
+                            }
+                            else{
+                                <h5 class="text-danger mt-3">Sold Out</h5>
+                                <form asp-action="RemoveFromWishlist" asp-controller="Wishlist" method="post" class="mt-5">
+                                    <input type="hidden" name="ID" value="@item.ID" />
+                                    <input type="hidden" name="Name" value="@item.Name" />
+                                    <input type="hidden" name="Price" value="@item.Price" />
+                                    <input type="hidden" name="Description" value="@item.Description" />
+                                    <input type="hidden" name="imageSrc" value="@item.imageSrc" />
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-trash3-fill btn-danger"></i> Remove
+                                    </button>
+                                </form>
+                            }
+                            
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sizeSelects = document.querySelectorAll('.size-select');
+            sizeSelects.forEach(sizeSelect => {
+                sizeSelect.addEventListener('change', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    const colorSelect = document.querySelector(`.color-select[data-product-id="${productId}"]`);
+                    const addToCartButton = document.querySelector(`.add-to-cart[data-product-id="${productId}"]`);
+                    const sizeInput = document.querySelector(`#size_${productId}`);
+
+                    // Set the selected size in the hidden input
+                    sizeInput.value = this.value;
+                    console.log(`Size selected for product ${productId}:`, this.value); // Debugging
+
+                    if (this.value) {
+                        // Fetch available colors for the selected size
+                        fetch(`/Cart/GetColorsForSize?productId=${productId}&sizeId=${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(`Colors fetched for product ${productId}:`, data); // Debugging
+                                colorSelect.innerHTML = '<option value="">Select Color</option>';
+                                data.forEach(color => {
+                                    const option = document.createElement('option');
+                                    option.value = color.colorId; // Ensure this returns the colorId
+                                    option.textContent = color.colorName;
+                                    colorSelect.appendChild(option);
+                                });
+                                colorSelect.disabled = false; // Enable the color dropdown
+                            })
+                            .catch(error => {
+                                console.error('Error fetching colors:', error);
+                            });
+                    } else {
+                        colorSelect.innerHTML = '<option value="">Select Color</option>';
+                        colorSelect.disabled = true; // Disable the color dropdown
+                        addToCartButton.disabled = true; // Disable the "Add to Cart" button
+                    }
+                });
+            });
+
+            const colorSelects = document.querySelectorAll('.color-select');
+            colorSelects.forEach(colorSelect => {
+                colorSelect.addEventListener('change', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    const addToCartButton = document.querySelector(`.add-to-cart[data-product-id="${productId}"]`);
+                    const colorInput = document.querySelector(`#color_${productId}`);
+
+                    // Set the selected color in the hidden input
+                    colorInput.value = this.value;
+                    console.log(`Color selected for product ${productId}:`, this.value); // Debugging
+
+                    if (this.value) {
+                        addToCartButton.disabled = false;
+                    } else {
+                        addToCartButton.disabled = true;
+                    }
+                });
+            });
+        });
+    </script>
+}

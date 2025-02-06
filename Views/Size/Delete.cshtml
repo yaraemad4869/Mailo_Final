@@ -1,0 +1,11 @@
+﻿@model Mailo.Models.Size
+
+<h2>Delete size</h2>
+
+<p>Are you sure you want to delete the size? <strong>@Model.SizeName</strong>؟</p>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

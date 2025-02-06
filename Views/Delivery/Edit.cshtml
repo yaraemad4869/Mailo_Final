@@ -1,0 +1,35 @@
+﻿@using Mailo.Data.Enums
+@using Mailo.Models
+@model Mailo.Models.Delivery
+
+@{
+    ViewData["Title"] = "Edit Delivery";
+}
+<style>
+    .container1 {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    }
+</style>
+<div class="container">
+<h1>Edit Delivery</h1>
+	<div class="container1 d-flex flex-column justify-content-center bg-light my-3 rounded-3 p-5">
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group mb-3">
+				<h5><label asp-for="Name" class="control-label"></label></h5>
+        <select asp-for="Name" class="form-control" asp-items="Html.GetEnumSelectList<Governorate>()"></select>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+				<h5><label asp-for="DeliveryFee" class="control-label"></label></h5>
+        <input asp-for="DeliveryFee" class="form-control" />
+        <span asp-validation-for="DeliveryFee" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-danger">Cancel</a>
+    </div>
+</form>
+</div>
+</div>

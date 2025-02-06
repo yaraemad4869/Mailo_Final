@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Mailo.Models.Color>
+@{
+    ViewData["Title"] = "Show Color";
+}
+<div class="container">
+    <div class="d-block d-md-flex justify-content-between align-items-center">
+        <h1 class="text-primary">Colors</h1>
+        <a href="@Url.Action("Create")" class="btn btn-primary p-2">Add Color</a>
+	</div>
+    <a asp-action="ProductManagement" asp-controller="Product" class="btn btn-primary ny-2">Go to Product Management</a>
+
+    @if (Model.Any())
+    {
+        <table class="table">
+        <thead>
+            <tr class="text-primary">
+                <th>Name</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var color in Model)
+            {
+                <tr>
+                    <td>@color.ColorName</td>
+                    <td><a asp-action="Edit" asp-route-id="@color.Id" class="btn btn-primary">Edit</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+
+    else{
+    <h2 class="text-center">No Colors</h2>
+    }
+
+</div>

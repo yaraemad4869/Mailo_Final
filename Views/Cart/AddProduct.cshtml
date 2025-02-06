@@ -1,0 +1,63 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Add to cart";
+}
+<style>
+    .container1 {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    }
+</style>
+<div class="container container1 d-flex flex-column justify-content-center bg-light my-3 rounded-3 p-3">
+
+<form method="post" asp-action="AddProduct">
+    <input asp-for="ID" hidden />
+    <input asp-for="AdditionDate" hidden />
+    <input asp-for="clientFile" hidden />
+
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Add product to cart</h2>
+            <hr />
+        </div>
+        <div>
+            <img id="myImg" src="@Model.imageSrc" height="200" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" disabled />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Price"></label>
+            <input asp-for="Price" class="form-control" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Discount"></label>
+            <input asp-for="Discount" class="form-control" disabled />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="form-control" disabled />
+        </div>
+
+        <!-- قسم اختيار المتغيرات (الحجم / اللون) -->
+        <div class="mb-3">
+            <label for="variantDropdown"><strong>Choose Variant:</strong></label>
+            <select id="variantDropdown" name="selectedVariant" class="form-select">
+                <option value="">Select Variant</option>
+                @foreach (var variant in Model.Variants)
+                {
+                    <option value="@variant.Id">@variant.Size - @variant.Color</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:150px">Add</button>
+        <a asp-action="Index_U" asp-controller="User" class="btn btn-danger" style="width:150px">
+            Cancel
+        </a>
+    </div>
+</form>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

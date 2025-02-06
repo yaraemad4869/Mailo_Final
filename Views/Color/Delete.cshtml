@@ -1,0 +1,11 @@
+﻿@model Mailo.Models.Color
+
+<h2>Delete color</h2>
+
+<p>Are you sure you want to delete the colo? <strong>@Model.ColorName</strong>؟</p>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

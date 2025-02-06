@@ -1,0 +1,22 @@
+﻿@model Mailo.Models.PromoCode
+
+<h2>Delete Promo Code</h2>
+
+<p>Are you sure you want to delete the following promo code?</p>
+
+<dl class="row">
+    <dt class="col-sm-2">Promo Code</dt>
+    <dd class="col-sm-10">@Model.Code</dd>
+
+    <dt class="col-sm-2">Discount</dt>
+    <dd class="col-sm-10">@Model.DiscountPercentage %</dd>
+
+    <dt class="col-sm-2">Expiry Date</dt>
+    <dd class="col-sm-10">@Model.ExpiryDate.ToShortDateString()</dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
